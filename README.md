@@ -1,5 +1,7 @@
 # roll_up 
 
+[![Join the chat at https://gitter.im/barrywhitehat/roll_up](https://gitter.im/barrywhitehat/roll_up.svg)](https://gitter.im/barrywhitehat/roll_up?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+
 Roll_up aggregates transactions so that they only require a single on chain transactions required to validate multiple other transactions.
 
 User create signatures and provers aggregates these signatures into a snark and use it to update a smart contract on the ethereum blockchain. 
