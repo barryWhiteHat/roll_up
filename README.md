@@ -2,11 +2,11 @@
 
 [![Join the chat at https://gitter.im/barrywhitehat/roll_up](https://gitter.im/barrywhitehat/roll_up.svg)](https://gitter.im/barrywhitehat/roll_up?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
-Roll_up aggregates transactions so that they only require a single on chain transactions required to validate multiple other transactions.
+Roll_up aggregates transactions so that they only require a single onchain transactions required to validate multiple other transactions.
 
-User create signatures and provers aggregates these signatures into a snark and use it to update a smart contract on the ethereum blockchain. 
+Multiple users sign hashes. Provers aggregates these signatures into a snark and use it to update a smart contract on the ethereum blockchain. After the update anyone can proof who signed it and when it was included in the smart contract.
 
-This is intended to be the database layer of snark-dapp (snapps) where the layers above define more rules about the changeing and updating the leaves
+This is intended to be the database layer of snark-dapp (snapps) where the layers above define more rules about changeing and updating the leaves
 
 `roll_up` does not make any rules about what happens in a leaf, what kind of leaves can be created and destoryed. This is the purview of 
 higher level snapps. Who can add their constraints in `src/roll_up.tcc` in the function `generate_r1cs_constraints()`
@@ -76,18 +76,18 @@ Although we dont use groth16 currently. This is the cheapest proving system to o
 
 groth16 confirm:  560000 including tx cost and input data is ~600000.
 
-The gas block limit is 6,000,000. So we can use the rest of the gas to maintain data availability. 
+The gas block limit is 8,000,000. So we can use the rest of the gas to maintain data availability. 
 
-6000000 - 600000  =  5400000
+8000000 - 600000  =  7400000
 
 We find that 5400000 is the remaining gas in the block. 
 
 So we calculate how much we can sepend on data availibinity
 
 
-5400000 / 1840 ~= 2934.782608695652
+7400000 / 1840 ~= 4021.73913043478
 
-2934.782608695652 / 15 = 195 transactions per second
+4021.73913043478 / 15 = 268 transactions per second
 
 
 ## Proving time
@@ -117,7 +117,7 @@ These problem should be mitigated or solved at the consensus level.
 
 ## Running tests 
 
-If you want to fun at noTx greater than 10 you will need more than 7BG
+If you want to fun at noTx greater than 10 you will need more than 7GB
 to add a bunch of swap space https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-16-04
 
 build everything 
