@@ -1,0 +1,9 @@
+[submodule "depends/baby_jubjub_ecc"]
+	path = depends/baby_jubjub_ecc
+	url = https://github.com/barrywhitehat/baby_jubjub_ecc
+[submodule "depends/libsnark"]
+	path = depends/libsnark
+	url = https://github.com/scipr-lab/libsnark.git
+[submodule "src/sha256_ethereum"]
+	path = src/sha256_ethereum
+	url = https://github.com/kobigurk/sha256_ethereum
