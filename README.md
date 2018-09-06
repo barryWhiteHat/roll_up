@@ -6,7 +6,7 @@ Roll_up aggregates transactions so that they only require a single onchain trans
 
 Multiple users create signatures. Provers aggregates these signatures into a snark and use it to update a smart contract on the ethereum blockchain. After the update anyone can proof who signed it and when it was included in the smart contract.
 
-This is intended to be the database layer of snark-dapp (snapps) where the layers above define more rules about changeing and updating the leaves
+This is intended to be the database layer of snark-dapp (snapps) where the layers above define more rules about changing and updating the leaves
 
 `roll_up` does not make any rules about what happens in a leaf, what kind of leaves can be created and destoryed. This is the purview of 
 higher level snapps. Who can add their constraints in `src/roll_up.tcc` in the function `generate_r1cs_constraints()`
@@ -80,10 +80,9 @@ The gas limit is 8,000,000 per block. So we can use the rest of the gas to maint
 
 8000000 - 600000  =  7400000
 
-We find that 5400000 is the remaining gas in the block. 
+We find that 7400000 is the remaining gas in the block. 
 
 So we calculate how much we can spend on data availability
-
 
 7400000 / 1840 ~= 4021.73913043478
 
