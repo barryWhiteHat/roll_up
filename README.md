@@ -2,9 +2,9 @@
 
 [![Join the chat at https://gitter.im/barrywhitehat/roll_up](https://gitter.im/barrywhitehat/roll_up.svg)](https://gitter.im/barrywhitehat/roll_up?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
-Roll_up aggregates transactions so that they only require a single onchain transactions required to validate multiple other transactions.
+Roll_up aggregates transactions so that they only require a single onchain transactions required to validate multiple other transactions. The snark checks the signature and applies the transaction to the the leaf that the signer owns.
 
-Multiple users create signatures. Provers aggregates these signatures into a snark and use it to update a smart contract on the ethereum blockchain. After the update anyone can proof who signed it and when it was included in the smart contract.
+Multiple users create signatures. Provers aggregates these signatures into a snark and use it to update a smart contract on the ethereum blockchain. A malicious prover who does not also have that leafs private key cannot change a leaf. Only the person who controls the private key can. 
 
 This is intended to be the database layer of snark-dapp (snapps) where the layers above define more rules about changing and updating the leaves
 
