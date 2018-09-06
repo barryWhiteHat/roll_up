@@ -2,11 +2,11 @@
 
 [![Join the chat at https://gitter.im/barrywhitehat/roll_up](https://gitter.im/barrywhitehat/roll_up.svg)](https://gitter.im/barrywhitehat/roll_up?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
-Roll_up aggregates transactions so that they only require a single on chain transactions required to validate multiple other transactions.
+Roll_up aggregates transactions so that they only require a single onchain transactions required to validate multiple other transactions.
 
-User create signatures and provers aggregates these signatures into a snark and use it to update a smart contract on the ethereum blockchain. 
+Multiple users create signatures. Provers aggregates these signatures into a snark and use it to update a smart contract on the ethereum blockchain. After the update anyone can proof who signed it and when it was included in the smart contract.
 
-This is intended to be the database layer of snark-dapp (snapps) where the layers above define more rules about the changeing and updating the leaves
+This is intended to be the database layer of snark-dapp (snapps) where the layers above define more rules about changing and updating the leaves
 
 `roll_up` does not make any rules about what happens in a leaf, what kind of leaves can be created and destoryed. This is the purview of 
 higher level snapps. Who can add their constraints in `src/roll_up.tcc` in the function `generate_r1cs_constraints()`
@@ -16,14 +16,14 @@ higher level snapps. Who can add their constraints in `src/roll_up.tcc` in the f
 The system is base use eddsa signatures defined in  [baby_jubjub_ecc](https://github.com/barryWhiteHat/baby_jubjub_ecc) base upon [baby_jubjub](https://github.com/barryWhiteHat/baby_jubjub). It uses sha256 padded with 512 bits input. 
 
 The leaf is defined as follows 
-'''
+```
 
                                         LEAF
                         +----------------^----------------+
                        LHS                               RHS
                +----------------+                
            Public_key_x    public_key_y         
-'''
+```
 
 The leaf is then injected into a merkle tree. 
 
@@ -72,36 +72,35 @@ Thus th system has the same data availability guarrentees as ethereum.
 Gas cost of function call: 23368
 Gas cost of throwing an event with a single leaf update : 1840
 
-Although we dont use groth16 currently. This is the cheapest proving system to our knowledge. 
+Although we don't use groth16 currently. This is the cheapest proving system to our knowledge. 
 
 groth16 confirm:  560000 including tx cost and input data is ~600000.
 
-The gas block limit is 6,000,000. So we can use the rest of the gas to maintain data availability. 
+The gas limit is 8,000,000 per block. So we can use the rest of the gas to maintain data availability. 
 
-6000000 - 600000  =  5400000
+8000000 - 600000  =  7400000
 
-We find that 5400000 is the remaining gas in the block. 
+We find that 7400000 is the remaining gas in the block. 
 
-So we calculate how much we can sepend on data availibinity
+So we calculate how much we can spend on data availability
 
+7400000 / 1840 ~= 4021.73913043478
 
-5400000 / 1840 ~= 2934.782608695652
-
-2934.782608695652 / 15 = 195 transactions per second
+4021.73913043478 / 15 = 268 transactions per second
 
 
 ## Proving time
 
-On a laptop with 7 GB or ram and 20 GB or swap space it struggles aggragate 20 transactions. This is a
+On a laptop with 7 GB of ram and 20 GB of swap space it struggles to aggragate 20 transactions per second. This is a
 combination of my hardware limits and cpp code that needs to be improved. 
 
 [Wu et al](https://eprint.iacr.org/2018/691) showed that is is possible to distribute
-these computaions that scales to billions of constaints. 
+these computations that scales to billions of constaints. 
 
 In order to reach the tps described above three approaches exist. 
 
 1. Improve the cpp code similar to https://github.com/HarryR/ethsnarks/issues/3 and run it on enteprize hardware.
-2. Implmenting the full ditribued system descibed by Wu et al.
+2. Implmenting the full distributed system described by Wu et al.
 3. Specialized hardware to create these proofs. 
 
 
@@ -117,7 +116,7 @@ These problem should be mitigated or solved at the consensus level.
 
 ## Running tests 
 
-If you want to fun at noTx greater than 10 you will need more than 7BG
+If you want to fun at noTx greater than 10 you will need more than 7GB
 to add a bunch of swap space https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-16-04
 
 build everything 
