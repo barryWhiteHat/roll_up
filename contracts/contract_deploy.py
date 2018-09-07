@@ -9,7 +9,7 @@
     (at your option) any later version.
 
     roll_up is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    but WITHOUT ANY WARRANTY without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
@@ -24,9 +24,6 @@ from web3 import Web3, HTTPProvider, TestRPCProvider
 from solc import compile_source, compile_standard, compile_files
 from solc import compile_source, compile_files, link_code
 from web3.contract import ConciseContract
-
-
-w3 = Web3(HTTPProvider("http://localhost:8545"));
 
 
 def hex2int(elements):
@@ -48,7 +45,9 @@ def compile(tree_depth):
     return(miximus_interface, verifier_interface)
    
 
-def contract_deploy(tree_depth, vk_dir, merkle_root):
+def contract_deploy(tree_depth, vk_dir, merkle_root, host="localhost"):
+    w3 = Web3(HTTPProvider(f"http://{host}:8545"))
+
     miximus_interface , verifier_interface  = compile(tree_depth)
     with open(vk_dir) as json_data:
         vk = json.load(json_data)
@@ -98,7 +97,8 @@ def contract_deploy(tree_depth, vk_dir, merkle_root):
     miximus = w3.eth.contract(address=miximus_address, abi=abi,ContractFactoryClass=ConciseContract)
     return(miximus)
 
-def verify(contract, proof):
+def verify(contract, proof, host="localhost"):
+    w3 = Web3(HTTPProvider(f"http://{host}:8545"))
 
     tx_hash = contract.isTrue(proof["a"] , proof["a_p"], proof["b"], proof["b_p"] , proof["c"], proof["c_p"] , proof["h"] , proof["k"], proof["input"] , transact={'from': w3.eth.accounts[0], 'gas': 4000000})
     tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash, 10000)

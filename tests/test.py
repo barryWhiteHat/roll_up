@@ -30,7 +30,9 @@ from utils import getSignature, createLeaf, hashPadded, libsnark2python
 import ed25519 as ed
 
 from web3 import Web3, HTTPProvider, TestRPCProvider
-w3 = Web3(HTTPProvider("http://localhost:8545"));
+
+host = sys.argv[1] if len(sys.argv) > 1 else "localhost"
+w3 = Web3(HTTPProvider(f"http://{host}:8545"));
 
 if __name__ == "__main__":
     
@@ -120,8 +122,12 @@ if __name__ == "__main__":
         leaves[j-1].append(old_leaf[j-1])
 
         address.append(0)
+<<<<<<< HEAD
     
     # Get zk proof and merkle root
+=======
+
+>>>>>>> Add volumes to docker-compose for test editing
     proof, root = genWitness(leaves, pub_x, pub_y, address, tree_depth, 
                                 rhs_leaf, new_leaf , R_x, R_y, S)              
 
@@ -151,9 +157,11 @@ if __name__ == "__main__":
 
         assert(libsnark2python(proof["input"][4:6])[0] == "0x" + leaves[1][0])
 
-        contract = contract_deploy(1, "../keys/vk.json", root)
+        contract = contract_deploy(1, "../keys/vk.json", root, host)
 
-        result = verify(contract, proof)
+        result = verify(contract, proof, host)
+
+        print(result)
         assert(result["status"] == 1)
         assert(w3.toHex(contract.getRoot())[:65] == root_final[:65])
     except:

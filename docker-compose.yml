@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+
+  testrpc:
+    image: trufflesuite/ganache-cli:v6.1.8
+    ports:
+      - 8545
+    networks:
+      - blockchain
+
+  test:
+    build: .
+    working_dir: /root/roll_up/tests
+    command: python3 test.py testrpc
+    depends_on:
+      - testrpc
+    networks:
+      - blockchain
+    volumes:
+      - ./tests:/root/roll_up/tests
+      - ./pythonWrapper:/root/roll_up/pythonWrapper
+      - ./keys:/root/roll_up/keys
+      - ./contracts/contract_deploy.py:/root/roll_up/contracts/contract_deploy.py
+
+networks:
+  blockchain:

@@ -19,7 +19,7 @@
 
 pragma solidity ^0.4.19;
 
-import "../contracts/Verifier.sol";
+import "./Verifier.sol";
 
 contract roll_up{
     bytes32 root;
