@@ -3,9 +3,12 @@ FROM ubuntu:18.04
 WORKDIR /root
 
 RUN apt-get update && \
+    apt-get install software-properties-common -y && \
+    add-apt-repository ppa:ethereum/ethereum -y && \
+    apt-get update && \
     apt-get install -y \
     wget unzip curl \
-    build-essential cmake git libgmp3-dev libprocps-dev python-markdown libboost-all-dev libssl-dev pkg-config python3-pip
+    build-essential cmake git libgmp3-dev libprocps-dev python-markdown libboost-all-dev libssl-dev pkg-config python3-pip solc
 
 COPY . /root/roll_up
 RUN cd roll_up \
