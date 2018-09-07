@@ -122,8 +122,12 @@ if __name__ == "__main__":
         leaves[j-1].append(old_leaf[j-1])
 
         address.append(0)
+<<<<<<< HEAD
     
     # Get zk proof and merkle root
+=======
+
+>>>>>>> Add volumes to docker-compose for test editing
     proof, root = genWitness(leaves, pub_x, pub_y, address, tree_depth, 
                                 rhs_leaf, new_leaf , R_x, R_y, S)              
 

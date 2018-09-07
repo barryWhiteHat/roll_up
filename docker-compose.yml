@@ -17,6 +17,8 @@ services:
       - testrpc
     networks:
       - blockchain
+    volumes:
+      - ./tests:/root/roll_up/tests
 
 networks:
   blockchain:
