@@ -160,6 +160,8 @@ if __name__ == "__main__":
         contract = contract_deploy(1, "../keys/vk.json", root, host)
 
         result = verify(contract, proof, host)
+
+        print(result)
         assert(result["status"] == 1)
         assert(w3.toHex(contract.getRoot())[:65] == root_final[:65])
     except:
