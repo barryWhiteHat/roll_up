@@ -157,9 +157,9 @@ if __name__ == "__main__":
 
         assert(libsnark2python(proof["input"][4:6])[0] == "0x" + leaves[1][0])
 
-        contract = contract_deploy(1, "../keys/vk.json", root)
+        contract = contract_deploy(1, "../keys/vk.json", root, host)
 
-        result = verify(contract, proof)
+        result = verify(contract, proof, host)
         assert(result["status"] == 1)
         assert(w3.toHex(contract.getRoot())[:65] == root_final[:65])
     except:

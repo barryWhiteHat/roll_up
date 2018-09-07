@@ -19,7 +19,9 @@ services:
       - blockchain
     volumes:
       - ./tests:/root/roll_up/tests
+      - ./pythonWrapper:/root/roll_up/pythonWrapper
       - ./keys:/root/roll_up/keys
+      - ./contracts/contract_deploy.py:/root/roll_up/contracts/contract_deploy.py
 
 networks:
   blockchain:
