@@ -98,7 +98,7 @@ if __name__ == "__main__":
         # we have to reverse the bits so that the 
         # unpacker in libsnark will return us the 
         # correct field element
-        # To put into small endian?
+        # To put into little-endian
         pub_key_x = hex(int(''.join(str(e) for e in hexToBinary(hex(public_key[j-1][0]))[::-1]),2)) 
         pub_key_y = hex(int(''.join(str(e) for e in hexToBinary(hex(public_key[j-1][1]))[::-1]),2))
            
