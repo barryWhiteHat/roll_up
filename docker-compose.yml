@@ -19,6 +19,7 @@ services:
       - blockchain
     volumes:
       - ./tests:/root/roll_up/tests
+      - ./keys:/root/roll_up/keys
 
 networks:
   blockchain:
