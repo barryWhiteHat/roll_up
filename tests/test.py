@@ -30,7 +30,9 @@ from utils import getSignature, createLeaf, hashPadded, libsnark2python
 import ed25519 as ed
 
 from web3 import Web3, HTTPProvider, TestRPCProvider
-w3 = Web3(HTTPProvider("http://localhost:8545"));
+
+host = sys.argv[1] if sys.argv[1] is not None else "testrpc"
+w3 = Web3(HTTPProvider("http://${host}:8545"));
 
 if __name__ == "__main__":
     
