@@ -30,12 +30,14 @@ from utils import getSignature, createLeaf, hashPadded, libsnark2python
 import ed25519 as ed
 
 from web3 import Web3, HTTPProvider, TestRPCProvider
-w3 = Web3(HTTPProvider("http://localhost:8545"));
+
+host = sys.argv[1] if len(sys.argv) > 1 else "localhost"
+w3 = Web3(HTTPProvider(f"http://{host}:8545"));
 
 if __name__ == "__main__":
-
-    pk_output = "../zksnark_element/pk.raw"
-    vk_output = "../zksnark_element/vk.json"
+    
+    pk_output = "../zksnark_element/pk.raw"  # Prover key
+    vk_output = "../zksnark_element/vk.json" # Verifier key
 
     #genKeys(c.c_int(noTx), c.c_char_p(pk_output.encode()) , c.c_char_p(vk_output.encode())) 
     
@@ -47,16 +49,22 @@ if __name__ == "__main__":
     S = []
     old_leaf = []
     new_leaf = []
-    rhs_leaf = []
+    rhs_leaf = []   # Message 
     address = []
     public_key = []
     sk = []
     fee = 0 
-
+    
+    # Generate random public key
     sk.append(genSalt(64)) 
+    
+    # Public key from private key
     public_key.append(ed.publickey(sk[0]))
-
+    
+    # Empty right handside of first leaf
     rhs_leaf.append(hashPadded("0"*64 , "0"*64)[2:])
+    
+    # Iterate over transactions
     for j in range (1,noTx + 1):
 
         leaves.append([])
@@ -67,40 +75,59 @@ if __name__ == "__main__":
 
       
         # create a random new leaf
+        # This is just a filler message for test purpose (e.g. 11111111... , 22222211111...)
         rhs_leaf.append(hashPadded(hex(j)[2]*64 , "1"*64)[2:])
- 
+        
+        # The old leaf is previous pubkey + previous message
         old_leaf.append(createLeaf(public_key[j-1], rhs_leaf[j-1]))
+        
+        # The new leaf is current pubkey with current message
         new_leaf.append(createLeaf(public_key[j], rhs_leaf[j]))
-
+        
+        # The message to sign is the previous leaf with the new leaf
         message = hashPadded(old_leaf[j-1], new_leaf[j-1])
+        
+        # Remove '0x' from byte
         message = message[2:]
-
+        
+        # Obtain Signature 
         r,s = getSignature(message, sk[j - 1], public_key[j-1])
 
         # check the signauer is correct
         ed.checkvalid(r, s, message, public_key[j-1])
 
-        # now we reverse teh buplic key by bit
+        # Now we reverse the puplic key by bit
         # we have to reverse the bits so that the 
         # unpacker in libsnark will return us the 
-        # correct field element 
+        # correct field element
+        # To put into little-endian
         pub_key_x = hex(int(''.join(str(e) for e in hexToBinary(hex(public_key[j-1][0]))[::-1]),2)) 
         pub_key_y = hex(int(''.join(str(e) for e in hexToBinary(hex(public_key[j-1][1]))[::-1]),2))
-
+           
         r[0] = hex(int(''.join(str(e) for e in hexToBinary(hex(r[0]))[::-1]),2))
         r[1] = hex(int(''.join(str(e) for e in hexToBinary(hex(r[1]))[::-1]),2))
-
+        
+        # Two r on x and y axis of curve
         R_x.append(r[0])
         R_y.append(r[1])
+        
+        # Store s
         S.append(s)
-
+        
+        # Store public key
         pub_x.append(pub_key_x) 
         pub_y.append(pub_key_y)
-
+        
+        
         leaves[j-1].append(old_leaf[j-1])
 
         address.append(0)
+<<<<<<< HEAD
     
+    # Get zk proof and merkle root
+=======
+
+>>>>>>> Add volumes to docker-compose for test editing
     proof, root = genWitness(leaves, pub_x, pub_y, address, tree_depth, 
                                 rhs_leaf, new_leaf , R_x, R_y, S)              
 
@@ -130,9 +157,11 @@ if __name__ == "__main__":
 
         assert(libsnark2python(proof["input"][4:6])[0] == "0x" + leaves[1][0])
 
-        contract = contract_deploy(1, "../keys/vk.json", root)
+        contract = contract_deploy(1, "../keys/vk.json", root, host)
 
-        result = verify(contract, proof)
+        result = verify(contract, proof, host)
+
+        print(result)
         assert(result["status"] == 1)
         assert(w3.toHex(contract.getRoot())[:65] == root_final[:65])
     except:
