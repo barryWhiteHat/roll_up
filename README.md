@@ -8,7 +8,7 @@ Multiple users create signatures. Provers aggregates these signatures into a sna
 
 This is intended to be the database layer of snark-dapp (snapps) where the layers above define more rules about changing and updating the leaves
 
-`roll_up` does not make any rules about what happens in a leaf, what kind of leaves can be created and destoryed. This is the purview of 
+`roll_up` does not make any rules about what happens in a leaf, what kind of leaves can be created and destroyed. This is the purview of 
 higher level snapps. Who can add their constraints in `src/roll_up.tcc` in the function `generate_r1cs_constraints()`
 
 ## In Depth
@@ -41,12 +41,12 @@ A transaction updates a single leaf in the merkle tree. A transaction takes the 
 ```
 
 
-In order to update the merkle tree the prover needs to aggragete together X transactions. For each transaction they check 
+In order to update the merkle tree the prover needs to aggregate together X transactions. For each transaction they check 
 ```
 1. Takes the merkel root as input from the smart contract (if it is the first iteration) or from the merkle root from the previous 
 transaction. 
 2. Find the leaf that matches the message in the merkle tree. 
-NOTE: If their are two messages that match both can be updated as their is no replay protection this should be solved on the next layer
+NOTE: If there are two messages that match, both can be updated as their is no replay protection this should be solved on the next layer
 this is simply the read and write layer, we do not check what is being written here. 
 3. Check that the proving key matches the owner of that leaf. 
 4. Confirm that the signature is correct.
@@ -59,13 +59,13 @@ The snark can then be included in a transaction to update the merkle root tracke
 
 ## Data availabilty guarrentees
 
-It is improtant that each prover is able to make merkle proofs for all leaves.
+It is important that each prover is able to make merkle proofs for all leaves.
 If they cannot these leaves are essentially locked until that information becomes available.
 
-In order to ensure this we pass every updated leaf to the smart contract so that
-that data will always be avilable. 
+In order to ensure this, we pass every updated leaf to the smart contract so that
+that data will always be available. 
 
-Thus th system has the same data availability guarrentees as ethereum.
+Thus the system has the same data availability guarrentees as ethereum.
 
 ## Scalability
 
@@ -99,24 +99,23 @@ these computations that scales to billions of constaints.
 
 In order to reach the tps described above three approaches exist. 
 
-1. Improve the cpp code similar to https://github.com/HarryR/ethsnarks/issues/3 and run it on enteprize hardware.
+1. Improve the cpp code similar to https://github.com/HarryR/ethsnarks/issues/3 and run it on enterprise hardware.
 2. Implmenting the full distributed system described by Wu et al.
 3. Specialized hardware to create these proofs. 
 
 
 ## Distribution
 
-The role of prover can be distributed but it means that each will have to purchase/rent hardware in order to be able to keep up with teh longest chain. 
+The role of prover can be distributed but it means that each will have to purchase/rent hardware in order to be able to keep up with the longest chain. 
 
-There are a few attacks where the fastest prover is able censor all other provers by constently updateing so the all competing provers proofs are 
-constant out of date. 
+There are a few attacks where the fastest prover is able censor all other provers by constantly updating so the all competing provers proofs are constantly out of date. 
 
 These problem should be mitigated or solved at the consensus level. 
 
 
 ## Running tests 
 
-If you want to fun at noTx greater than 10 you will need more than 7GB
+If you want to run at noTx greater than 10 you will need more than 7GB
 to add a bunch of swap space https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-16-04
 
 build everything 
