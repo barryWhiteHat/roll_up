@@ -99,7 +99,7 @@ these computations that scales to billions of constaints.
 
 In order to reach the tps described above three approaches exist. 
 
-1. Improve the cpp code similar to https://github.com/HarryR/ethsnarks/issues/3 and run it on enteprize hardware.
+1. Improve the cpp code similar to https://github.com/HarryR/ethsnarks/issues/3 and run it on enterprize hardware.
 2. Implmenting the full distributed system described by Wu et al.
 3. Specialized hardware to create these proofs. 
 
