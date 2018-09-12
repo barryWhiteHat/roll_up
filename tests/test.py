@@ -32,7 +32,8 @@ import ed25519 as ed
 from web3 import Web3, HTTPProvider, TestRPCProvider
 
 host = sys.argv[1] if len(sys.argv) > 1 else "localhost"
-w3 = Web3(HTTPProvider(f"http://{host}:8545"));
+w3 = Web3(HTTPProvider("http://" + host + ":8545"))
+
 
 if __name__ == "__main__":
     
@@ -161,7 +162,7 @@ if __name__ == "__main__":
         assert(result["status"] == 1)
         assert(w3.toHex(contract.getRoot())[:65] == root_final[:65])
     except:
-
+        pdb.set_trace()
         raise
 
 

@@ -79,7 +79,7 @@ namespace libsnark {
                       // noTx*2 for address, leaf
                       // noTx*2*253/256 for the left over bits
                       // that do not fit in a 253 bit field element.
-    pb.set_input_sizes(5 + noTx*2 + (noTx*2*253/256));
+    pb.set_input_sizes(6);
 
     transactions.resize(noTx);
     transactions[0].reset(new tx<FieldT, HashT>(pb,
