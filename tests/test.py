@@ -70,7 +70,7 @@ if __name__ == "__main__":
 
         leaves.append([])
         
-        # create a random pub key
+        # create a random pub key from priv key
         sk.append(genSalt(64)) 
         public_key.append(ed.publickey(sk[j]))
 
