@@ -56,7 +56,7 @@ if __name__ == "__main__":
     sk = []
     fee = 0 
     
-    # Generate random public key
+    # Generate random private key
     sk.append(genSalt(64)) 
     
     # Public key from private key
