@@ -94,7 +94,7 @@ if __name__ == "__main__":
         # Obtain Signature 
         r,s = getSignature(message, sk[j - 1], public_key[j-1])
 
-        # check the signauer is correct
+        # check the signature is correct
         ed.checkvalid(r, s, message, public_key[j-1])
 
         # Now we reverse the puplic key by bit
