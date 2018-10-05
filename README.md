@@ -1,6 +1,6 @@
 # roll_up 
 
-[![Join the chat at https://gitter.im/barrywhitehat/roll_up](https://gitter.im/barrywhitehat/roll_up.svg)](https://gitter.im/barrywhitehat/roll_up?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+[![Join the chat at https://gitter.im/barrywhitehat/roll_up](https://badges.gitter.im/barrywhitehat/roll_up.png)](https://gitter.im/barrywhitehat/roll_up?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
 Roll_up aggregates transactions so that they only require a single onchain transactions required to validate multiple other transactions. The snark checks the signature and applies the transaction to the the leaf that the signer owns.
 
