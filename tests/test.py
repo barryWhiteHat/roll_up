@@ -144,6 +144,8 @@ if __name__ == "__main__":
 
 
     #root , merkle_tree = utils.genMerkelTree(tree_depth, leaves[0])
+
+    print(proof["input"])
     try:
         inputs = libsnark2python(proof["input"])      
         assert(libsnark2python(proof["input"][:2])[0] == root)
