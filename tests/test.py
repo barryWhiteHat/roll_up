@@ -161,7 +161,7 @@ if __name__ == "__main__":
         print(result)
         assert(result["status"] == 1)
         assert(w3.toHex(contract.getRoot())[:65] == root_final[:65])
-    except:
+    except Exception as err:
         pdb.set_trace()
         raise
 
