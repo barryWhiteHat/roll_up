@@ -23,7 +23,7 @@ extern "C" {
 
 #include <stdbool.h>
 #include <stdint.h>
-const int tree_depth = 1;
+const int tree_depth = 2;
 char* _sha256Constraints();
 char* _sha256Witness();
 char* prove(bool path[][tree_depth][256],  bool _pub_key_x[][256], bool _pub_key_y[][256] , bool _root[][256], 
