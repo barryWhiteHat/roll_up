@@ -32,8 +32,8 @@ sys.path.insert(0, '../pythonWrapper')
 import utils 
 from utils import libsnark2python
 
-tree_depth = 1
-noTx = 2
+tree_depth = 2
+noTx = 4
 lib = cdll.LoadLibrary('../build/src/libroll_up_wrapper.so')
 
 
