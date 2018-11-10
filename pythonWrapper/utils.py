@@ -26,6 +26,24 @@ sys.path.insert(0, "../depends/baby_jubjub_ecc/tests")
 
 import ed25519 as ed
 
+def hex2int(elements):
+    ints = []
+    for el in elements:
+        ints.append(int(el, 16))
+    return(ints)
+
+def normalize_proof(proof):
+    proof["a"] = hex2int(proof["a"])
+    proof["a_p"] = hex2int(proof["a_p"])
+    proof["b"] = [hex2int(proof["b"][0]), hex2int(proof["b"][1])]
+    proof["b_p"] = hex2int(proof["b_p"])
+    proof["c"] = hex2int(proof["c"])
+    proof["c_p"] = hex2int(proof["c_p"])
+    proof["h"] = hex2int(proof["h"])
+    proof["k"] = hex2int(proof["k"])
+    proof["input"] = hex2int(proof["input"]) 
+    
+    return proof
 
 def getSignature(m,sk,pk):
 

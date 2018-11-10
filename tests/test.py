@@ -23,10 +23,10 @@ sys.path.insert(0, '../pythonWrapper')
 sys.path.insert(0, "../depends/baby_jubjub_ecc/tests")
 
 sys.path.insert(0, '../contracts')
-from contract_deploy import contract_deploy, verify, hex2int
+from contract_deploy import contract_deploy, verify
 
 from helper import *
-from utils import getSignature, createLeaf, hashPadded, libsnark2python
+from utils import getSignature, createLeaf, hashPadded, libsnark2python, normalize_proof, hex2int
 import ed25519 as ed
 
 from web3 import Web3, HTTPProvider, TestRPCProvider
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     # Empty right handside of first leaf
     rhs_leaf.append(hashPadded("0"*64 , "0"*64)[2:])
     
-    # Iterate over transactions
+    # Iterate over transactions on the merkle tree
     for j in range (1,noTx + 1):
 
         leaves.append([])
@@ -130,22 +130,10 @@ if __name__ == "__main__":
 
 
 
-
-    proof["a"] = hex2int(proof["a"])
-    proof["a_p"] = hex2int(proof["a_p"])
-    proof["b"] = [hex2int(proof["b"][0]), hex2int(proof["b"][1])]
-    proof["b_p"] = hex2int(proof["b_p"])
-    proof["c"] = hex2int(proof["c"])
-    proof["c_p"] = hex2int(proof["c_p"])
-    proof["h"] = hex2int(proof["h"])
-    proof["k"] = hex2int(proof["k"])
-    proof["input"] = hex2int(proof["input"]) 
-
-
+    proof = normalize_proof(proof)
 
     #root , merkle_tree = utils.genMerkelTree(tree_depth, leaves[0])
 
-    print(proof["input"])
     try:
         inputs = libsnark2python(proof["input"])     
 

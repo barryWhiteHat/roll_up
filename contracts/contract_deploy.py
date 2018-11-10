@@ -25,12 +25,7 @@ from solc import compile_source, compile_standard, compile_files
 from solc import compile_source, compile_files, link_code
 from web3.contract import ConciseContract
 
-
-def hex2int(elements):
-    ints = []
-    for el in elements:
-        ints.append(int(el, 16))
-    return(ints)
+from utils import hex2int
 
 def compile(tree_depth):
     rollup = "../contracts/roll_up.sol"
