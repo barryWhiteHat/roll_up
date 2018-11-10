@@ -138,7 +138,7 @@ void r1cs_to_json(protoboard<FieldT> pb, std::string path)
     ss << "\n{\"aux_input\":[";
     for (size_t i = 0; i < auxiliary_input.size() + 1; ++i)
     {   
-        ss << '"' << primary_input[i].as_bigint() << '"';
+        ss << '"' << auxiliary_input[i].as_bigint() << '"';
         if (i < auxiliary_input.size() ) {
             ss << ", ";
         }
