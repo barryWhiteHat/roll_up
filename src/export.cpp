@@ -111,24 +111,39 @@ void array_to_json(protoboard<FieldT> pb, uint input_variables,  std::string pat
 }
 
 template<typename FieldT>
-void r1cs_to_json(protoboard<FieldT> pb, uint input_variables, std::string path)
+void r1cs_to_json(protoboard<FieldT> pb, std::string path)
     {
     // output inputs, right now need to compile with debug flag so that the `variable_annotations`
     // exists. Having trouble setting that up so will leave for now.
     r1cs_constraint_system<FieldT> constraints = pb.get_constraint_system();
+
+    r1cs_primary_input <FieldT> primary_input = pb.primary_input();
+    r1cs_auxiliary_input <FieldT> auxiliary_input = pb.auxiliary_input();
+
     std::stringstream ss;
     std::ofstream fh;
     fh.open(path, std::ios::binary);
 
-    ss << "\n{\"variables\":[";
-    
-    for (size_t i = 0; i < input_variables + 1; ++i) 
+    ss << "\n{\"primary_input\":[";
+    int input_variables = primary_input.size(); 
+    for (size_t i = 0; i < primary_input.size() + 1; ++i) 
     {   
-        ss << '"' << constraints.variable_annotations[i].c_str() << '"';
-        if (i < input_variables ) {
+        ss << '"' << primary_input[i].as_bigint() << '"';
+        if (i < primary_input.size() ) {
             ss << ", ";
         }
     }
+
+    ss << "],\n";
+    ss << "\n{\"aux_input\":[";
+    for (size_t i = 0; i < auxiliary_input.size() + 1; ++i)
+    {   
+        ss << '"' << primary_input[i].as_bigint() << '"';
+        if (i < auxiliary_input.size() ) {
+            ss << ", ";
+        }
+    }
+
     ss << "],\n";
     ss << "\"constraints\":[";
      

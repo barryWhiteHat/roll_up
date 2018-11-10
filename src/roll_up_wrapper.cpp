@@ -265,6 +265,7 @@ char* prove(bool _path[][tree_depth][256], bool _pub_key_x[][256], bool _pub_key
     pb.primary_input();
     pb.auxiliary_input();
 
+    r1cs_to_json(pb, "../keys/witness.json");
     r1cs_ppzksnark_keypair<libff::alt_bn128_pp> keypair = generateKeypair(pb.get_constraint_system());
 
     //save keys
