@@ -25,30 +25,25 @@ from solc import compile_source, compile_standard, compile_files
 from solc import compile_source, compile_files, link_code
 from web3.contract import ConciseContract
 
-
-def hex2int(elements):
-    ints = []
-    for el in elements:
-        ints.append(int(el, 16))
-    return(ints)
+from utils import hex2int
 
 def compile(tree_depth):
-    miximus = "../contracts/roll_up.sol"
+    rollup = "../contracts/roll_up.sol"
     Pairing =  "../contracts/Pairing.sol"
     Verifier = "../contracts/Verifier.sol"
 
-    compiled_sol =  compile_files([Pairing, Verifier, miximus], allow_paths="./contracts")
+    compiled_sol =  compile_files([Pairing, Verifier, rollup], allow_paths="./contracts")
 
-    miximus_interface = compiled_sol[miximus + ':roll_up']
+    rollup_interface = compiled_sol[rollup + ':roll_up']
     verifier_interface = compiled_sol[Verifier + ':Verifier']
 
-    return(miximus_interface, verifier_interface)
+    return(rollup_interface, verifier_interface)
    
 
 def contract_deploy(tree_depth, vk_dir, merkle_root, host="localhost"):
     w3 = Web3(HTTPProvider("http://" + host + ":8545"))
 
-    miximus_interface , verifier_interface  = compile(tree_depth)
+    rollup_interface , verifier_interface  = compile(tree_depth)
     with open(vk_dir) as json_data:
         vk = json.load(json_data)
 
@@ -69,7 +64,7 @@ def contract_deploy(tree_depth, vk_dir, merkle_root, host="localhost"):
     ]
 
      # Instantiate and deploy contract
-    miximus = w3.eth.contract(abi=miximus_interface['abi'], bytecode=miximus_interface['bin'])
+    rollup = w3.eth.contract(abi=rollup_interface['abi'], bytecode=rollup_interface['bin'])
     verifier = w3.eth.contract(abi=verifier_interface['abi'], bytecode=verifier_interface['bin'])
 
     # Get transaction hash from deployed contract
@@ -86,16 +81,16 @@ def contract_deploy(tree_depth, vk_dir, merkle_root, host="localhost"):
         tx_hash = verifier.addIC(vk[-1] , transact={'from': w3.eth.accounts[0], 'gas': 4000000})
         tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash, 100000)
 
-    tx_hash = miximus.deploy(transaction={'from': w3.eth.accounts[0], 'gas': 4000000}, args=[verifier_address, merkle_root])
+    tx_hash = rollup.deploy(transaction={'from': w3.eth.accounts[0], 'gas': 4000000}, args=[verifier_address, merkle_root])
 
     # Get tx receipt to get contract address
     tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash, 10000)
-    miximus_address = tx_receipt['contractAddress']
+    rollup_address = tx_receipt['contractAddress']
 
     # Contract instance in concise mode
-    abi = miximus_interface['abi']
-    miximus = w3.eth.contract(address=miximus_address, abi=abi,ContractFactoryClass=ConciseContract)
-    return(miximus)
+    abi = rollup_interface['abi']
+    rollup = w3.eth.contract(address=rollup_address, abi=abi,ContractFactoryClass=ConciseContract)
+    return(rollup)
 
 def verify(contract, proof, host="localhost"):
     w3 = Web3(HTTPProvider("http://" + host + ":8545"))

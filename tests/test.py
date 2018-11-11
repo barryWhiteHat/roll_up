@@ -23,10 +23,10 @@ sys.path.insert(0, '../pythonWrapper')
 sys.path.insert(0, "../depends/baby_jubjub_ecc/tests")
 
 sys.path.insert(0, '../contracts')
-from contract_deploy import contract_deploy, verify, hex2int
+from contract_deploy import contract_deploy, verify
 
 from helper import *
-from utils import getSignature, createLeaf, hashPadded, libsnark2python
+from utils import getSignature, createLeaf, hashPadded, libsnark2python, normalize_proof, hex2int
 import ed25519 as ed
 
 from web3 import Web3, HTTPProvider, TestRPCProvider
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     # Empty right handside of first leaf
     rhs_leaf.append(hashPadded("0"*64 , "0"*64)[2:])
     
-    # Iterate over transactions
+    # Iterate over transactions on the merkle tree
     for j in range (1,noTx + 1):
 
         leaves.append([])
@@ -130,38 +130,35 @@ if __name__ == "__main__":
 
 
 
-
-    proof["a"] = hex2int(proof["a"])
-    proof["a_p"] = hex2int(proof["a_p"])
-    proof["b"] = [hex2int(proof["b"][0]), hex2int(proof["b"][1])]
-    proof["b_p"] = hex2int(proof["b_p"])
-    proof["c"] = hex2int(proof["c"])
-    proof["c_p"] = hex2int(proof["c_p"])
-    proof["h"] = hex2int(proof["h"])
-    proof["k"] = hex2int(proof["k"])
-    proof["input"] = hex2int(proof["input"]) 
-
-
+    proof = normalize_proof(proof)
 
     #root , merkle_tree = utils.genMerkelTree(tree_depth, leaves[0])
+
     try:
-        inputs = libsnark2python(proof["input"])      
-        assert(libsnark2python(proof["input"][:2])[0] == root)
+        inputs = libsnark2python(proof["input"])     
+
+        proof_input_root = libsnark2python(proof["input"][:2])[0] 
+        assert proof_input_root == root, "Proof input {} not matching the root {}".format(proof_input_root, root)
         # calculate final root
         root_final , merkle_tree = utils.genMerkelTree(tree_depth, leaves[-1])
 
-        assert(libsnark2python(proof["input"][2:4])[0] == root_final)
+        proof_input_root_final = libsnark2python(proof["input"][2:4])[0]
+        assert proof_input_root_final == root_final, "Proof input final root {} not matching the final root".format(proof_input_root_final, root_final)
 
-        assert(libsnark2python(proof["input"][4:6])[0] == "0x" + leaves[1][0])
+        first_leaf = libsnark2python(proof["input"][4:6])[0]
+        assert first_leaf == "0x" + leaves[1][0], "First leaf {} is not matching the leaf".format(first_leaf, leaves[1][0])
 
         contract = contract_deploy(1, "../keys/vk.json", root, host)
 
         result = verify(contract, proof, host)
 
         print(result)
-        assert(result["status"] == 1)
-        assert(w3.toHex(contract.getRoot())[:65] == root_final[:65])
-    except:
+        assert result["status"] == 1, "Result status of the verify function not equal to 1, but equals to {}".format(result['status'])
+        
+        
+        contract_root = w3.toHex(contract.getRoot())[:65]
+        assert contract_root == root_final[:65], "contract root {} not equals to root_final {}".format(contract_root, root_final)
+    except Exception as err:
         pdb.set_trace()
         raise
 
