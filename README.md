@@ -118,7 +118,7 @@ These problem should be mitigated or solved at the consensus level.
 If you want to run at noTx greater than 10 you will need more than 7GB
 to add a bunch of swap space https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-16-04
 
-build everything 
+### Build everything 
 
 ```
 mkdir keys
@@ -128,14 +128,29 @@ cd build
 cmake .. && make
 ```
 
+### Run the tests
+
+NOTE: Make sure you have a node running so the smart contract would be deployed and validate the transaction, you can use 
+`testrpc` or `ganache-cli`
+
 ```
 cd ../tests/
 python3 test.py
 ```
 
-make sure you have a node running so the smart contract be be deployed and validate the transaction. 
+### Change the merkle tree depth and number of transactions to be aggregated
 
-`testrpc`
+You'd need to update two files, and re-build the prover.
 
+In `pythonWrapper/helper.py`
 
+```
+tree_depth = 2
+noTx = 4
+```
 
+In `src/roll_up_wrapper.hpp`
+
+```
+const int tree_depth = 2;
+```
