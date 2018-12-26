@@ -62,7 +62,7 @@ The snark can then be included in a transaction to update the merkle root tracke
 It is important that each prover is able to make merkle proofs for all leaves.
 If they cannot these leaves are essentially locked until that information becomes available.
 
-In order to ensure this, we pass every updated leaf to the smart contract so that
+In order to ensure this, we pass every updated leaf to the smart contract so
 that data will always be available. 
 
 Thus the system has the same data availability guarrentees as ethereum.
